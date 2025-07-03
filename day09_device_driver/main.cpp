@@ -7,8 +7,8 @@ using namespace testing;
 
 class DeviceDrvierFixture : public Test {
 protected:
-	DeviceDriver driver;
 	MockFlashMemoryDevice mockFlashMemoryDevice;
+	DeviceDriver driver;
 
 	DeviceDrvierFixture() : driver(&mockFlashMemoryDevice) {}
 
@@ -21,6 +21,7 @@ private:
 TEST_F(DeviceDrvierFixture, ReadFromHw) {
 
 	EXPECT_CALL(mockFlashMemoryDevice, read(0xFF))
+		.Times(5)
 		.WillRepeatedly(::testing::Return(0xFF));
 
 	EXPECT_EQ(0xFF, driver.read(0xFF));
@@ -38,13 +39,25 @@ TEST_F(DeviceDrvierFixture, ReadFromHwFailed) {
 TEST_F(DeviceDrvierFixture, WriteToHw) {
 
 	EXPECT_CALL(mockFlashMemoryDevice, read(0x30))
-		.WillRepeatedly(::testing::Return(0xFF));
+		.WillOnce(::testing::Return(0xFF));
 
 
 	EXPECT_CALL(mockFlashMemoryDevice, write(0x30, 0x55))
 		.Times(1);
 
 	driver.write(0x30, 0x55);
+}
+
+TEST_F(DeviceDrvierFixture, WriteToHwFailed) {
+
+	EXPECT_CALL(mockFlashMemoryDevice, read(0x31))
+		.WillRepeatedly(::testing::Return(0x20));
+
+
+	EXPECT_CALL(mockFlashMemoryDevice, write(_, _))
+		.Times(0);
+
+	EXPECT_THROW(driver.write(0x31, 0x55), WriteFailException);
 }
 
 
