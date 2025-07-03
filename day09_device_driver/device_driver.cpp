@@ -20,6 +20,6 @@ int DeviceDriver::read(long address)
 
 void DeviceDriver::write(long address, int data)
 {
-    // TODO: implement this method
+    // TODO: impl55ement this method
     m_hardware->write(address, (unsigned char)data);
 }
