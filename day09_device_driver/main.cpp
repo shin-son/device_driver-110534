@@ -13,6 +13,17 @@ TEST(DeviceDriver, ReadFromHw) {
 	EXPECT_EQ(0xFF, data);
 }
 
+TEST(DeviceDriver, ReadFromHwFailed) {
+	MockFlashMemoryDevice mockFlashMemoryDevice;
+	EXPECT_CALL(mockFlashMemoryDevice, read(0xFF))
+		.WillOnce(::testing::Return(0xFA))
+		.WillRepeatedly(::testing::Return(0xFF));
+
+	DeviceDriver driver(&mockFlashMemoryDevice);
+	EXPECT_THROW(driver.read(0xFF), ReadFailException);
+}
+
+
 int main() {
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
