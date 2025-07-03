@@ -32,5 +32,11 @@
     <ClInclude Include="flash_memory_device.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="custom_exceptions.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="mock_flash_memory_device.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
